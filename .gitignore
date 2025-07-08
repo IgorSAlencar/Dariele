@@ -1,0 +1,36 @@
+# Arquivos Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv
+.env
+
+# Arquivos de upload temporários
+uploads/
+*.tmp
+
+# Arquivos Excel temporários
+~$*.xlsx
+~$*.xls
+.~lock.*
+
+# Arquivos de log
+*.log
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Arquivos de saída temporários
+teste_layout.xlsx
+Relatorio.xlsx 

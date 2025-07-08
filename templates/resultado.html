@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consolidação Concluída - Consolidador Excel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <i class="fas fa-file-excel icon-excel"></i>
+                <h1>Consolidador de Arquivos Excel</h1>
+                <p>Consolidação concluída com sucesso!</p>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="result-section">
+                {% if sucesso %}
+                    <div class="success-card">
+                        <div class="success-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        
+                        <h2>✅ Arquivos Consolidados com Sucesso!</h2>
+                        
+                        <div class="result-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-file-import"></i>
+                                <span class="stat-number">{{ num_arquivos }}</span>
+                                <span class="stat-label">arquivo(s) processado(s)</span>
+                            </div>
+                            
+                            <div class="stat-item">
+                                <i class="fas fa-layer-group"></i>
+                                <span class="stat-number">{{ planilhas|length if planilhas else num_arquivos }}</span>
+                                <span class="stat-label">planilha(s) criada(s)</span>
+                            </div>
+                        </div>
+
+                        {% if planilhas %}
+                            <div class="planilhas-info">
+                                <h3><i class="fas fa-list"></i> Planilhas no arquivo consolidado:</h3>
+                                <ul class="planilhas-list">
+                                    {% for planilha in planilhas %}
+                                        <li>
+                                            <i class="fas fa-table"></i>
+                                            {{ planilha }}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+
+                        <div class="download-section">
+                            <a href="{{ url_for('download_file') }}" class="btn-download">
+                                <i class="fas fa-download"></i>
+                                Baixar Arquivo Consolidado
+                            </a>
+                            
+                            <p class="download-info">
+                                <i class="fas fa-info-circle"></i>
+                                O arquivo será baixado como "Relatorio_Consolidado.xlsx"
+                            </p>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="error-card">
+                        <div class="error-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        
+                        <h2>❌ Erro na Consolidação</h2>
+                        <p>Houve um problema ao processar seus arquivos. Tente novamente.</p>
+                        
+                        <a href="{{ url_for('index') }}" class="btn-retry">
+                            <i class="fas fa-redo"></i>
+                            Tentar Novamente
+                        </a>
+                    </div>
+                {% endif %}
+
+                <div class="actions-section">
+                    <a href="{{ url_for('index') }}" class="btn-secondary">
+                        <i class="fas fa-plus"></i>
+                        Consolidar Outros Arquivos
+                    </a>
+                </div>
+            </div>
+
+            <div class="tips-section">
+                <div class="info-card">
+                    <h3><i class="fas fa-lightbulb"></i> Dicas</h3>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Verifique o arquivo baixado no Excel</li>
+                        <li><i class="fas fa-check"></i> Cada planilha mantém o nome do arquivo original</li>
+                        <li><i class="fas fa-check"></i> A formatação básica foi preservada</li>
+                        <li><i class="fas fa-check"></i> Você pode consolidar quantos arquivos quiser</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <h3><i class="fas fa-question-circle"></i> Precisa de ajuda?</h3>
+                    <p>Se encontrou algum problema ou tem sugestões, entre em contato conosco.</p>
+                    <ul>
+                        <li><i class="fas fa-envelope"></i> Suporte técnico disponível</li>
+                        <li><i class="fas fa-clock"></i> Processamento rápido e seguro</li>
+                        <li><i class="fas fa-shield-alt"></i> Seus dados são protegidos</li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2024 Consolidador Excel - Desenvolvido com <i class="fas fa-heart"></i></p>
+        </footer>
+    </div>
+
+    <script>
+        // Auto-scroll to result
+        document.querySelector('.success-card, .error-card').scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+        });
+
+        // Download button enhancement
+        const downloadBtn = document.querySelector('.btn-download');
+        if (downloadBtn) {
+            downloadBtn.addEventListener('click', function() {
+                // Add visual feedback
+                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Iniciando Download...';
+                
+                // Reset after 3 seconds
+                setTimeout(() => {
+                    this.innerHTML = '<i class="fas fa-check"></i> Download Iniciado';
+                }, 1000);
+                
+                setTimeout(() => {
+                    this.innerHTML = '<i class="fas fa-download"></i> Baixar Arquivo Consolidado';
+                }, 3000);
+            });
+        }
+
+        // Add confetti effect for success
+        {% if sucesso %}
+            // Simple confetti effect
+            function createConfetti() {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.animationDelay = Math.random() * 2 + 's';
+                confetti.innerHTML = '🎉';
+                document.body.appendChild(confetti);
+                
+                setTimeout(() => {
+                    confetti.remove();
+                }, 3000);
+            }
+            
+            // Create multiple confetti
+            for (let i = 0; i < 15; i++) {
+                setTimeout(createConfetti, i * 100);
+            }
+        {% endif %}
+    </script>
+
+    <style>
+        .confetti {
+            position: fixed;
+            top: -10px;
+            font-size: 20px;
+            animation: confetti-fall 3s linear forwards;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</body>
+</html> 

@@ -16,10 +16,13 @@ app.secret_key = 'consolidador_excel_2024'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 
 # Configurações
-UPLOAD_FOLDER = 'uploads'
+UPLOAD_FOLDER = os.environ.get(
+    'UPLOAD_FOLDER', os.path.join(tempfile.gettempdir(), 'uploads')
+)
 ALLOWED_EXTENSIONS = {'xls', 'xlsx'}
 
-# Criar pasta de uploads se não existir
+# Criar pasta de uploads se não existir (usado /tmp por padrão em ambientes
+# serverless)
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 def allowed_file(filename):
